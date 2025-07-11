@@ -1,0 +1,19 @@
+{
+    "database": {
+        "host": "localhost",
+        "port": 5432,
+        "name": "myapp_dev",
+        "username": "dev_user",
+        "password": "dev_pass"
+    },
+    "api": {
+        "base_url": "https://api.dev.myapp.com",
+        "timeout": 30,
+        "debug": true
+    },
+    "features": {
+        "payments_enabled": false,
+        "email_notifications": true,
+        "logging_level": "DEBUG"
+    }
+}

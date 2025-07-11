@@ -1,0 +1,27 @@
+{
+    "database": {
+        "host": "test-db.myapp.com",
+        "port": 5432,
+        "name": "myapp_test",
+        "username": "test_user",
+        "password": "test_pass",
+        "pool_size": 3
+    },
+    "api": {
+        "base_url": "https://api.test.myapp.com",
+        "timeout": 20,
+        "debug": true,
+        "rate_limit": 500
+    },
+    "features": {
+        "payments_enabled": true,
+        "email_notifications": false,
+        "logging_level": "INFO",
+        "cache_enabled": true
+    },
+    "security": {
+        "jwt_secret": "test_secret_key",
+        "encryption_key": "test_encryption_key",
+        "ssl_enabled": true
+    }    
+}
