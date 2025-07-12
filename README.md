@@ -3,7 +3,7 @@
 
 A comprehensive Python-based configuration management system designed for multi-environment applications. This system provides robust configuration handling, backup functionality, and validation capabilities.
 
-## 🚀 Features
+## Features:
 
 - **Multi-Environment Support**: Handle configurations for development, testing, staging, and production
 - **Automatic Backup**: Create backups before configuration changes
