@@ -1,6 +1,3 @@
-# Complete Configuration Management System
-# File: src/config_manager.py
-
 import json
 import os
 import argparse

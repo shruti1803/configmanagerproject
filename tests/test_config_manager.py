@@ -1,5 +1,3 @@
-# File: tests/test_config_manager.py
-# Test suite for Configuration Management System
 import unittest
 import json
 import tempfile
