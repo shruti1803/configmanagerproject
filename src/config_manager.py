@@ -35,12 +35,10 @@ class ConfigManager:
         self.backup_path = Path(backup_path)
         self.current_env = "development"
         self.logger = self._setup_logging()
-        
-        # Create directories if they don't exist
         self.config_path.mkdir(exist_ok=True)
         self.backup_path.mkdir(exist_ok=True)
         
-        # Initialize default environments if they don't exist
+         
         self._initialize_default_configs()
         
         self.logger.info("ConfigManager initialized")
@@ -120,7 +118,7 @@ class ConfigManager:
                     "port": 5432,
                     "name": "myapp_prod",
                     "username": "prod_user",
-                    "password": "${DB_PASSWORD}",  # Environment variable
+                    "password": "${DB_PASSWORD}",   
                     "pool_size": 20
                 },
                 "api": {
@@ -169,7 +167,7 @@ class ConfigManager:
         try:
             with open(config_file, 'r') as file:
                 config = json.load(file)
-                # Process environment variables
+                 
                 config = self._process_environment_variables(config)
                 self.logger.info(f"Loaded configuration for environment: {environment}")
                 return config
@@ -185,8 +183,8 @@ class ConfigManager:
             elif isinstance(d, list):
                 return [process_dict(item) for item in d]
             elif isinstance(d, str) and d.startswith('${') and d.endswith('}'):
-                env_var = d[2:-1]  # Remove ${ and }
-                return os.getenv(env_var, d)  # Return original if env var not found
+                env_var = d[2:-1]   
+                return os.getenv(env_var, d)  
             else:
                 return d
         
@@ -207,13 +205,13 @@ class ConfigManager:
         config_file = self.config_path / f"{environment}.json"
         
         try:
-            # Validate configuration before saving
+            
             is_valid, errors = self.validate_config(config)
             if not is_valid:
                 self.logger.error(f"Invalid configuration: {errors}")
                 return False
             
-            # Create backup before saving
+             
             if create_backup and config_file.exists():
                 self.create_backup(environment)
             
@@ -300,8 +298,7 @@ class ConfigManager:
             Tuple of (is_valid, list_of_errors)
         """
         errors = []
-        
-        # Define required structure
+         
         required_structure = {
             "database": ["host", "port", "name", "username", "password"],
             "api": ["base_url", "timeout", "debug"],
@@ -309,18 +306,18 @@ class ConfigManager:
             "security": ["jwt_secret", "encryption_key", "ssl_enabled"]
         }
         
-        # Check for required sections
+         
         for section, keys in required_structure.items():
             if section not in config:
                 errors.append(f"Missing required section: {section}")
                 continue
             
-            # Check for required keys in each section
+             
             for key in keys:
                 if key not in config[section]:
                     errors.append(f"Missing required key: {section}.{key}")
         
-        # Validate data types
+         
         if "database" in config:
             db_config = config["database"]
             if "port" in db_config and not isinstance(db_config["port"], int):
@@ -377,17 +374,17 @@ class ConfigManager:
             config = self.load_config(environment)
             keys = key_path.split('.')
             
-            # Navigate to the parent of the target key
+             
             current = config
             for key in keys[:-1]:
                 if key not in current:
                     current[key] = {}
                 current = current[key]
             
-            # Set the value
+            
             current[keys[-1]] = value
             
-            # Save the updated configuration
+           
             return self.save_config(environment, config)
             
         except Exception as e:
@@ -428,7 +425,7 @@ class ConfigManager:
         for file in self.backup_path.glob(pattern):
             backups.append(file.name)
         
-        return sorted(backups, reverse=True)  # Most recent first
+        return sorted(backups, reverse=True)  
     
     def compare_configs(self, env1: str, env2: str) -> Dict[str, Any]:
         """
@@ -530,47 +527,46 @@ Examples:
         
         subparsers = parser.add_subparsers(dest='command', help='Available commands')
         
-        # List command
+      
         list_parser = subparsers.add_parser('list', help='List environments or backups')
         list_parser.add_argument('--backups', action='store_true', help='List backups')
         list_parser.add_argument('--environment', '-e', help='Filter backups by environment')
-        
-        # Load command
+         
         load_parser = subparsers.add_parser('load', help='Load and display configuration')
         load_parser.add_argument('environment', help='Environment name')
         
-        # Get command
+       
         get_parser = subparsers.add_parser('get', help='Get configuration value')
         get_parser.add_argument('environment', help='Environment name')
         get_parser.add_argument('key', help='Configuration key (dot notation)')
         
-        # Set command
+      
         set_parser = subparsers.add_parser('set', help='Set configuration value')
         set_parser.add_argument('environment', help='Environment name')
         set_parser.add_argument('key', help='Configuration key (dot notation)')
         set_parser.add_argument('value', help='Value to set')
         
-        # Backup command
+ 
         backup_parser = subparsers.add_parser('backup', help='Create backup')
         backup_parser.add_argument('environment', help='Environment name')
         
-        # Restore command
+      
         restore_parser = subparsers.add_parser('restore', help='Restore from backup')
         restore_parser.add_argument('environment', help='Environment name')
         restore_parser.add_argument('timestamp', help='Backup timestamp')
         
-        # Compare command
+  
         compare_parser = subparsers.add_parser('compare', help='Compare configurations')
         compare_parser.add_argument('env1', help='First environment')
         compare_parser.add_argument('env2', help='Second environment')
         
-        # Export command
+        
         export_parser = subparsers.add_parser('export', help='Export configuration')
         export_parser.add_argument('environment', help='Environment name')
         export_parser.add_argument('format', choices=['json', 'yaml', 'env'], 
                                   default='json', help='Export format')
         
-        # Validate command
+         
         validate_parser = subparsers.add_parser('validate', help='Validate configuration')
         validate_parser.add_argument('environment', help='Environment name')
         
@@ -672,8 +668,6 @@ Examples:
             print(f"Error: {e}")
             sys.exit(1)
 
-
-# Main execution
 if __name__ == "__main__":
     cli = ConfigManagerCLI()
     cli.run()
